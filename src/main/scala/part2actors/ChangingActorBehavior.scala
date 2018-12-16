@@ -147,10 +147,10 @@ object ChangingActorBehavior extends App {
 
     private def aggregating(report: Map[String, Int], stillWaitingCitizens: Set[ActorRef]): Receive = {
       case AggregateVotes(_) => println("[vote aggregator] Aggregation in progress, please wait!")
-      case VoteStatusReply(Some(vote)) =>
-        println(s"[vote aggregator] Vote accepted $vote")
-        val existingVotes = report.getOrElse(vote, 0)
-        val updatedReport = report ++ Map(vote -> (existingVotes + 1))
+      case VoteStatusReply(Some(candidate)) =>
+        println(s"[vote aggregator] Vote accepted $candidate")
+        val existingVotes = report.getOrElse(candidate, 0)
+        val updatedReport = report + (candidate -> (existingVotes + 1))
         val newStillWaitingCitizens = stillWaitingCitizens - sender()
         if (newStillWaitingCitizens.isEmpty) {
           println(s"[vote aggregator] Vote result: $updatedReport")
